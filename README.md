@@ -9,7 +9,7 @@ This project was developed as part of an academic assignment focused on containe
 
 ---
 
-# What It Does 🧠
+## What It Does 🧠
 
 ZoomMate receives a BMP image from the user via the frontend, processes it in multiple backend services (including zooming operations using RMI servers), and delivers the zoomed image back to the user for download.
 
@@ -23,7 +23,7 @@ ZoomMate receives a BMP image from the user via the frontend, processes it in mu
 
 ---
 
-# Technologies Used 🛠️
+## Technologies Used 🛠️
 
 - **Frontend:** Next.js (React)
 - **Backend:**
@@ -40,7 +40,7 @@ ZoomMate receives a BMP image from the user via the frontend, processes it in mu
 
 ---
 
-# Architecture Diagram 🖼️
+## Architecture Diagram 🖼️
 
 <p align="center">
   <img src="./diagram.png" alt="Architecture Diagram" width="800">
@@ -48,7 +48,7 @@ ZoomMate receives a BMP image from the user via the frontend, processes it in mu
 
 ---
 
-# How to Run It 🚀
+## How to Run It 🚀
 
 ### ✅ Prerequisites:
 - Docker & Docker Compose installed on your system.
@@ -66,7 +66,7 @@ http://localhost/
 
 ---
 
-# Container Breakdown 🧩
+## Container Breakdown 🧩
 
 | Container | Role |
 |----------|------|
@@ -81,7 +81,7 @@ http://localhost/
 
 ---
 
-# Environment Configuration 🔧
+## Environment Configuration 🔧
 
 All container interactions and environment variables are already defined in the `docker-compose.yml`. SNMP is configured on each container using port `161/udp`.
 
@@ -89,6 +89,6 @@ Make sure ports like `8081`, `3001`, `80`, `1099`, and `61616` are available bef
 
 ---
 
-# License 📄
+## License 📄
 
 This project is licensed under the [MIT License](LICENSE).
