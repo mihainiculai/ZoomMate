@@ -1,0 +1,18 @@
+<tomee>
+    <Resource id="MyActiveMQResourceAdapter" type="ActiveMQResourceAdapter">
+        ServerUrl = tcp://${JMS_BROKER_HOST}:${JMS_BROKER_PORT}
+        BrokerXmlConfig =
+    </Resource>
+
+    <Resource id="jms/ConnectionFactory" type="jakarta.jms.ConnectionFactory">
+        ResourceAdapter = MyActiveMQResourceAdapter
+    </Resource>
+
+    <Resource id="jms/topic/zoom" type="jakarta.jms.Topic"/>
+
+    <Container id="MyMDBContainer" type="MESSAGE">
+        ResourceAdapter = MyActiveMQResourceAdapter
+    </Container>
+
+    <Deployments dir="apps"/>
+</tomee>

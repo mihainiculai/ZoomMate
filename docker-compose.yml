@@ -1,0 +1,145 @@
+services:
+  c01-backend-java:
+    build:
+      context: c01-java-backend
+      dockerfile: Dockerfile
+    container_name: c01-java-backend
+    restart: always
+    ports:
+      - "8081:8081"
+      - "1611:161/udp"
+    environment:
+      - JMS_BROKER_HOST=c02-jms-broker
+      - JMS_BROKER_PORT=61616
+    networks:
+      - project-network
+    depends_on:
+      - c02-jms-broker
+
+  c02-jms-broker:
+    build:
+      context: c02-jms-broker
+      dockerfile: Dockerfile
+    container_name: c02-jms-broker
+    restart: always
+    ports:
+      - "61616:61616"
+      - "1612:161/udp"
+    networks:
+      - project-network
+
+  c03-ejb-mdb:
+    build:
+      context: c03-ejb-mdb
+      dockerfile: Dockerfile
+    container_name: c03-ejb-mdb
+    restart: always
+    environment:
+      - JMS_BROKER_HOST=c02-jms-broker
+      - JMS_BROKER_PORT=61616
+      - C01_NOTIFY_URL=http://c01-backend-java:8081/api/notifyJobDone
+      - C04_RMI_HOST=c04-rmi-server
+      - C04_RMI_PORT=1099
+      - C05_RMI_HOST=c05-rmi-server
+      - C05_RMI_PORT=1099
+      - C06_IMAGE_UPLOAD_URL=http://c06-nodejs-backend:3001/api/upload
+      - C06_DOWNLOAD_URL_PREFIX=http://0.0.0.0:3001
+    ports:
+      - "1613:161/udp"
+    networks:
+      - project-network
+    depends_on:
+      - c02-jms-broker
+      - c04-rmi-server
+      - c05-rmi-server
+      - c06-nodejs-backend
+
+  c04-rmi-server:
+    build:
+      context: c04-c05-rmi-server
+      dockerfile: Dockerfile
+    container_name: c04-rmi-server
+    restart: always
+    ports:
+      - "10991:1099"
+      - "1614:161/udp"
+    networks:
+      - project-network
+
+  c05-rmi-server:
+    build:
+      context: c04-c05-rmi-server
+      dockerfile: Dockerfile
+    container_name: c05-rmi-server
+    restart: always
+    ports:
+      - "10992:1099"
+      - "1615:161/udp"
+    networks:
+      - project-network
+
+  c06-nodejs-backend:
+    build:
+      context: c06-nodejs-backend
+      dockerfile: Dockerfile
+    container_name: c06-nodejs-backend
+    restart: always
+    environment:
+      - MYSQL_HOST=c07-mysql
+      - MYSQL_USER=stud
+      - MYSQL_PASSWORD=stud
+      - MYSQL_DATABASE=database
+      - MONGO_URL=mongodb://stud:stud@c08-mongodb:27017
+      - MONGO_DB_NAME=database
+    ports:
+      - "3001:3001"
+      - "1616:161/udp"
+    networks:
+      - project-network
+    depends_on:
+      - c07-mysql
+      - c08-mongodb
+
+  c07-mysql:
+    image: mysql:latest
+    container_name: c07-mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=stud
+      - MYSQL_PASSWORD=stud
+    ports:
+      - "3306:3306"
+    networks:
+      - project-network
+    command: --max_allowed_packet=1073741824
+
+  c08-mongodb:
+    image: mongo
+    container_name: c08-mongodb
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=stud
+      - MONGO_INITDB_ROOT_PASSWORD=stud
+    ports:
+      - 27017:27017
+    networks:
+      - project-network
+
+  c09-frontend-nextjs:
+    build:
+      context: c09-nextjs-frontend
+      dockerfile: Dockerfile
+    container_name: c09-nextjs-frontend
+    ports:
+      - "80:3000"
+    networks:
+      - project-network
+    depends_on:
+      - c01-backend-java
+      - c06-nodejs-backend
+
+networks:
+  project-network:
+    driver: bridge
