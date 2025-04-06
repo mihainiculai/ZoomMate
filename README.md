@@ -64,9 +64,6 @@ Open your browser and navigate to:
 http://localhost/
 ```
 
-### 📂 Image Testing:
-You can use the test BMP images in the `images-test` folder, or upload your own BMP image. (Make sure to try the second one!)
-
 ---
 
 # Container Breakdown 🧩
